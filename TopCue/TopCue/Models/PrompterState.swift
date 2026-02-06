@@ -16,6 +16,12 @@ enum PlaybackState {
     case paused         // Pause manuelle (bouton)
 }
 
+/// Modes d'affichage disponibles pour le prompteur.
+enum PrompterMode: String {
+    case notch
+    case floating
+}
+
 /// Etat observable de la presentation en cours
 @Observable
 final class PrompterState {
@@ -34,6 +40,24 @@ final class PrompterState {
     /// La fenetre du prompteur est-elle visible
     var isWindowVisible: Bool = false
 
+    /// Mode d'affichage courant du prompteur
+    var mode: PrompterMode = .notch
+
+    /// Controle si la fenetre est exclue du partage d'ecran
+    var isInvisible: Bool = true
+
+    /// Taille courante du conteneur visible du prompteur
+    var panelSize: CGSize = CGSize(
+        width: Constants.Notch.openWidth,
+        height: Constants.Notch.openHeight
+    )
+
+    /// Hauteur physique du notch detectee sur l'ecran actif
+    var detectedNotchHeight: CGFloat = Constants.Notch.physicalHeight
+
+    /// Indique si un notch reel a ete detecte sur un ecran connecte
+    var hasDetectedNotch: Bool = false
+
     // MARK: - Computed
 
     var isPlaying: Bool {
@@ -42,6 +66,10 @@ final class PrompterState {
 
     var isPaused: Bool {
         playbackState == .paused || playbackState == .hoveredPause
+    }
+
+    var isFloatingMode: Bool {
+        mode == .floating
     }
 
     // MARK: - Actions
@@ -94,12 +122,20 @@ final class PrompterState {
         scrollOffset = 0
     }
 
+    func toggleMode() {
+        mode = isFloatingMode ? .notch : .floating
+    }
+
+    func toggleInvisibility() {
+        isInvisible.toggle()
+    }
+
     func increaseSpeed() {
-        speed = min(speed + 12.5, 200) // Max 4x (200 pts/s)
+        speed = min(speed + Constants.Prompter.speedStep, Constants.Prompter.maxSpeed)
     }
 
     func decreaseSpeed() {
-        speed = max(speed - 12.5, 12.5) // Min 0.25x (12.5 pts/s)
+        speed = max(speed - Constants.Prompter.speedStep, Constants.Prompter.minSpeed)
     }
 
     /// Multiplicateur de vitesse affichable (ex: "1.0x")

@@ -53,6 +53,9 @@ enum Constants {
         /// Largeur du prompteur (compact, juste un peu plus large que le notch)
         static let openWidth: CGFloat = 310
 
+        /// Marge ajoutee autour de la largeur du notch detecte
+        static let extraWidthPadding: CGFloat = 40
+
         /// Hauteur totale : notch (~32pt) + zone texte (~60pt) = ~92pt
         static let openHeight: CGFloat = 92
 
@@ -67,6 +70,19 @@ enum Constants {
 
         /// Padding bas interieur
         static let bottomPadding: CGFloat = 8
+    }
+
+    // MARK: - Floating Mode
+
+    enum Floating {
+        /// Largeur par defaut en mode fenetre flottante
+        static let width: CGFloat = 500
+
+        /// Hauteur par defaut en mode fenetre flottante
+        static let height: CGFloat = 200
+
+        /// Rayon des coins du mode fenetre flottante
+        static let cornerRadius: CGFloat = 18
     }
 
     // MARK: - Window
