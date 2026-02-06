@@ -7,66 +7,62 @@
 
 import AppKit
 
-/// NSPanel subclass pour la fenetre flottante du prompteur.
-/// - Non-activating : ne vole pas le focus
-/// - Floating : reste au-dessus des autres fenetres
-/// - FullScreenAuxiliary : reste visible au-dessus des apps fullscreen
+/// NSPanel completement transparent qui se fusionne avec le notch physique.
+///
+/// Inspiré de boring.notch / Atoll :
+/// - Fond transparent, pas de barre de titre, pas d'ombre
+/// - Niveau au-dessus de la menu bar (.mainMenu + 3)
+/// - Immobile, collé au haut de l'ecran
+/// - Visible sur tous les Spaces
 final class FloatingPanel: NSPanel {
 
-    init(contentRect: NSRect = NSRect(
-        x: 0, y: 0,
-        width: Constants.Window.defaultSize.width,
-        height: Constants.Window.defaultSize.height
-    )) {
+    init() {
         super.init(
-            contentRect: contentRect,
+            contentRect: .zero,
             styleMask: [
                 .nonactivatingPanel,
-                .titled,
-                .resizable,
-                .closable,
+                .borderless,
                 .fullSizeContentView
             ],
             backing: .buffered,
             defer: false
         )
 
-        // --- Comportement flottant ---
+        // --- Fenetre flottante ---
         isFloatingPanel = true
-        level = .floating
+        level = .mainMenu + 3       // Au-dessus de la menu bar et du notch
         hidesOnDeactivate = false
-        isMovableByWindowBackground = true
+
+        // --- Pas de barre de titre ---
         titleVisibility = .hidden
         titlebarAppearsTransparent = true
 
-        // --- Comportement Spaces ---
+        // --- Completement transparent ---
+        isOpaque = false
+        backgroundColor = .clear
+        hasShadow = false
+
+        // --- Immobile ---
+        isMovable = false
+        isMovableByWindowBackground = false
+
+        // --- Visible partout ---
         collectionBehavior = [
             .canJoinAllSpaces,
-            .fullScreenAuxiliary
+            .fullScreenAuxiliary,
+            .stationary,
+            .ignoresCycle
         ]
 
-        // --- Apparence ---
-        backgroundColor = .black
-        isOpaque = false
-        hasShadow = true
-
-        // --- Taille ---
-        minSize = Constants.Window.minSize
-
-        // --- Coins arrondis ---
-        if let contentView = contentView {
-            contentView.wantsLayer = true
-            contentView.layer?.cornerRadius = 12
-            contentView.layer?.masksToBounds = true
-        }
+        isReleasedWhenClosed = false
     }
 
     // MARK: - Key handling
 
-    /// Permet de recevoir les evenements clavier meme en non-activating
     override var canBecomeKey: Bool { true }
+    override var canBecomeMain: Bool { true }
 
-    /// Fermer la fenetre au lieu de la detruire
+    /// Cache la fenetre au lieu de la detruire
     override func close() {
         orderOut(nil)
     }

@@ -9,7 +9,9 @@ import AppKit
 import SwiftUI
 
 /// Gere la creation et l'affichage de la fenetre flottante du prompteur.
-/// Heberge la PrompterView SwiftUI dans un NSPanel via NSHostingView.
+///
+/// La fenetre est completement transparente et positionnee au sommet de l'ecran
+/// pour que son contenu (noir + NotchShape) fusionne visuellement avec le notch physique.
 @Observable
 final class WindowManager {
 
@@ -30,7 +32,6 @@ final class WindowManager {
     func showPrompter(script: Script) {
         prompterState.currentScript = script
         prompterState.scrollOffset = 0
-        prompterState.playbackState = .idle
 
         if panel == nil {
             createPanel()
@@ -38,19 +39,14 @@ final class WindowManager {
 
         guard let panel else { return }
 
-        // Centrer la fenetre sur l'ecran principal
-        if let screen = NSScreen.main {
-            let screenFrame = screen.visibleFrame
-            let panelSize = panel.frame.size
-            let origin = NSPoint(
-                x: screenFrame.midX - panelSize.width / 2,
-                y: screenFrame.midY - panelSize.height / 2
-            )
-            panel.setFrameOrigin(origin)
-        }
+        // Positionner la fenetre collee au haut de l'ecran, centree sur le notch
+        positionAtNotch(panel: panel)
 
         panel.makeKeyAndOrderFront(nil)
         prompterState.isWindowVisible = true
+
+        // Demarrer automatiquement le defilement
+        prompterState.play()
     }
 
     /// Ferme la fenetre du prompteur
@@ -67,8 +63,33 @@ final class WindowManager {
 
         let prompterView = PrompterView(state: prompterState)
         let hostingView = NSHostingView(rootView: prompterView)
+        hostingView.layer?.backgroundColor = .clear
+
         panel.contentView = hostingView
 
         self.panel = panel
+    }
+
+    /// Positionne la fenetre au sommet de l'ecran, centree horizontalement,
+    /// avec le bord superieur touchant le haut physique de l'ecran.
+    /// La fenetre transparente + contenu noir clippe en NotchShape
+    /// fusionne visuellement avec le notch physique.
+    private func positionAtNotch(panel: FloatingPanel) {
+        guard let screen = NSScreen.main else { return }
+
+        let panelWidth = Constants.Notch.openWidth
+        let panelHeight = Constants.Notch.openHeight
+
+        // Centrer horizontalement sur l'ecran
+        let originX = screen.frame.midX - panelWidth / 2
+
+        // Coller le bord superieur au haut de l'ecran
+        // En coordonnees AppKit : y = 0 en bas, donc maxY = haut de l'ecran
+        let originY = screen.frame.maxY - panelHeight
+
+        panel.setFrame(
+            CGRect(x: originX, y: originY, width: panelWidth, height: panelHeight),
+            display: true
+        )
     }
 }

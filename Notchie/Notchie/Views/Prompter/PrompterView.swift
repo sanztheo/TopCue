@@ -7,8 +7,13 @@
 
 import SwiftUI
 
-/// Vue du teleprompter : affiche le texte en defilement automatique.
-/// Fond noir, texte blanc monospace, controles de lecture.
+/// Vue du teleprompter qui s'integre visuellement dans le notch MacBook.
+///
+/// Architecture :
+/// - La fenetre (FloatingPanel) est 100% transparente
+/// - Le contenu est un ZStack noir clippe avec NotchShape
+/// - Le noir du contenu fusionne avec le noir du notch physique
+/// - Effet : le texte semble "sortir" du notch
 struct PrompterView: View {
 
     @Bindable var state: PrompterState
@@ -20,60 +25,75 @@ struct PrompterView: View {
     @AppStorage("textColorHex") private var textColorHex: String = "#FFFFFF"
 
     var body: some View {
-        ZStack {
-            // Fond noir
-            Constants.Colors.prompterBackground
-                .ignoresSafeArea()
+        // Fond completement transparent (laisse voir le bureau)
+        Color.clear
+            .overlay(alignment: .top) {
+                notchContent
+            }
+            .onAppear {
+                let controller = ScrollController(state: state)
+                scrollController = controller
+                controller.start()
+            }
+            .onDisappear {
+                scrollController?.stop()
+            }
+    }
 
+    // MARK: - Notch Content
+
+    /// Le contenu noir qui fusionne avec le notch physique
+    private var notchContent: some View {
+        ZStack(alignment: .top) {
+            // Texte defilant
             if let script = state.currentScript {
-                // Texte defilant
                 GeometryReader { geometry in
                     ScrollView(.vertical, showsIndicators: false) {
                         Text(script.content)
                             .font(.system(size: fontSize, design: .monospaced))
                             .foregroundStyle(textColor)
                             .lineSpacing(Constants.Prompter.lineSpacing)
-                            .padding(Constants.Prompter.textPadding)
+                            .padding(.top, Constants.Notch.closedHeight + 8)
+                            .padding(.horizontal, Constants.Notch.horizontalPadding + Constants.Notch.topCornerRadius)
+                            .padding(.bottom, geometry.size.height * 0.6)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            // Padding en bas pour pouvoir scroller au-dela du dernier texte
-                            .padding(.bottom, geometry.size.height * 0.8)
                             .offset(y: -state.scrollOffset)
                     }
-                    .scrollDisabled(true) // On gere le scroll nous-memes
-                }
-
-                // Overlay de controles au hover
-                if isHovering || !state.isPlaying {
-                    controlsOverlay
+                    .scrollDisabled(true)
                 }
             } else {
-                Text("Aucun script selectionne")
-                    .font(.title2)
-                    .foregroundStyle(.gray)
+                VStack {
+                    Spacer()
+                    Text("Aucun script selectionne")
+                        .font(.title2)
+                        .foregroundStyle(.gray)
+                    Spacer()
+                }
+            }
+
+            // Controles au hover
+            if isHovering || !state.isPlaying {
+                controlsOverlay
             }
         }
+        .frame(
+            width: Constants.Notch.openWidth,
+            height: Constants.Notch.openHeight
+        )
+        .background(.black)
+        .clipShape(NotchShape())
+        .shadow(
+            color: .black.opacity(isHovering ? 0.6 : 0.3),
+            radius: 10
+        )
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.2)) {
                 isHovering = hovering
             }
-            // Pause au hover
-            if hovering && state.isPlaying {
-                state.pause()
-            } else if !hovering && state.isPaused {
-                state.play()
-            }
-        }
-        .onAppear {
-            let controller = ScrollController(state: state)
-            scrollController = controller
-            controller.start()
-        }
-        .onDisappear {
-            scrollController?.stop()
         }
     }
 
-    // MARK: - Subviews
+    // MARK: - Controls Overlay
 
     private var controlsOverlay: some View {
         VStack {
@@ -117,7 +137,7 @@ struct PrompterView: View {
             .padding(.horizontal, 20)
             .background(.black.opacity(0.7))
             .clipShape(Capsule())
-            .padding(.bottom, 16)
+            .padding(.bottom, Constants.Notch.bottomPadding + 8)
         }
         .transition(.opacity)
     }

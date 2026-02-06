@@ -44,6 +44,35 @@ enum Constants {
         static let frameRate: TimeInterval = 1.0 / 60.0
     }
 
+    // MARK: - Notch
+
+    enum Notch {
+        /// Largeur du notch physique sur MacBook Pro 14" (~200pt)
+        /// On prend un peu plus large pour le contenu de chaque cote
+        static let closedWidth: CGFloat = 200
+
+        /// Hauteur fermee (= hauteur du notch physique, ~32pt)
+        static let closedHeight: CGFloat = 32
+
+        /// Largeur de la fenetre quand le prompteur est ouvert
+        static let openWidth: CGFloat = 550
+
+        /// Hauteur de la fenetre quand le prompteur est ouvert
+        static let openHeight: CGFloat = 340
+
+        /// Rayon des coins du haut (petits, comme le notch physique)
+        static let topCornerRadius: CGFloat = 6
+
+        /// Rayon des coins du bas (grands, effet pilule)
+        static let bottomCornerRadius: CGFloat = 14
+
+        /// Padding horizontal a l'interieur de la NotchShape
+        static let horizontalPadding: CGFloat = 12
+
+        /// Padding vertical en bas a l'interieur de la NotchShape
+        static let bottomPadding: CGFloat = 12
+    }
+
     // MARK: - Window
 
     enum Window {
