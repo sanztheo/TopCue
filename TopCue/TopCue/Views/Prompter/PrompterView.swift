@@ -11,7 +11,9 @@ import SwiftUI
 struct PrompterView: View {
 
     @Bindable var state: PrompterState
+    @Bindable var voiceDetector: VoiceDetector
     let onToggleInvisibility: () -> Void
+    let onToggleVoiceMode: () -> Void
 
     @State private var scrollController: ScrollController?
     @State private var isHovering = false
@@ -45,9 +47,22 @@ struct PrompterView: View {
         ZStack(alignment: .top) {
             scrollingContent
 
+            if state.voiceModeEnabled {
+                VStack {
+                    Spacer()
+                    VoiceBeamView(audioLevel: voiceDetector.audioLevel)
+                        .padding(.bottom, state.isFloatingMode ? 8 : 6)
+                }
+            }
+
             if isVisibilityBadgeVisible,
                let visibilityBadgeText {
                 visibilityBadge(text: visibilityBadgeText)
+            }
+
+            if let permissionMessage = voiceDetector.microphonePermissionMessage {
+                permissionBadge(text: permissionMessage)
+                    .padding(.top, permissionBadgeTopInset)
             }
 
             if isHovering {
@@ -188,6 +203,8 @@ struct PrompterView: View {
                 zoomControls
                 controlDivider
                 visibilityButton
+                controlDivider
+                voiceModeButton
             }
             .foregroundStyle(.white)
             .padding(.vertical, 5)
@@ -273,6 +290,18 @@ struct PrompterView: View {
         .help(state.isInvisible ? "Invisible au partage" : "Visible au partage")
     }
 
+    private var voiceModeButton: some View {
+        Button {
+            onToggleVoiceMode()
+        } label: {
+            Image(systemName: state.voiceModeEnabled ? "mic.fill" : "mic.slash.fill")
+                .font(.caption2)
+                .foregroundStyle(state.voiceModeEnabled ? .cyan : .white)
+        }
+        .buttonStyle(.plain)
+        .help(state.voiceModeEnabled ? "Desactiver mode voix" : "Activer mode voix")
+    }
+
     private var controlDivider: some View {
         Rectangle()
             .fill(.white.opacity(0.25))
@@ -297,6 +326,27 @@ struct PrompterView: View {
             .transition(.opacity)
     }
 
+    private func permissionBadge(text: String) -> some View {
+        Text(text)
+            .font(.system(size: 10, weight: .semibold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(Color.red.opacity(0.72))
+            .overlay(
+                Capsule()
+                    .stroke(.white.opacity(0.35), lineWidth: 1)
+            )
+            .clipShape(Capsule())
+            .transition(.opacity)
+    }
+
+    private var permissionBadgeTopInset: CGFloat {
+        let defaultInset = state.isFloatingMode ? 8 : state.detectedNotchHeight + 6
+        guard isVisibilityBadgeVisible else { return defaultInset }
+        return defaultInset + 24
+    }
+
     private func showVisibilityBadge() {
         hideBadgeTask?.cancel()
         visibilityBadgeText = state.isInvisible ? "Invisible" : "Visible"
@@ -317,7 +367,7 @@ struct PrompterView: View {
     // MARK: - Scrolling
 
     private func startScrollingIfNeeded() {
-        let controller = ScrollController(state: state)
+        let controller = ScrollController(state: state, voiceDetector: voiceDetector)
         scrollController = controller
         controller.start()
     }

@@ -44,6 +44,40 @@ enum Constants {
         static let frameRate: TimeInterval = 1.0 / 60.0
     }
 
+    // MARK: - Voice
+
+    enum Voice {
+        /// Cle UserDefaults du mode voix
+        static let modeEnabledKey = "voice.mode.enabled"
+
+        /// Cle UserDefaults de sensibilite micro
+        static let sensitivityKey = "voice.sensitivity"
+
+        /// Sensibilite par defaut (0.0 = tres sensible, 1.0 = peu sensible)
+        static let defaultSensitivity: Double = 0.5
+
+        /// Borne basse du seuil RMS
+        static let thresholdMin: Double = 0.01
+
+        /// Amplitude du seuil RMS selon la sensibilite
+        static let thresholdRange: Double = 0.09
+
+        /// Delai sans voix avant retour en silence (secondes)
+        static let silenceDebounce: TimeInterval = 0.3
+
+        /// Facteur de transition douce du defilement vocal
+        static let scrollEasingFactor: CGFloat = 0.18
+
+        /// Vitesse minimale consideree comme nulle en easing
+        static let minVelocityFactor: CGFloat = 0.002
+
+        /// Taille de buffer audio pour le tap micro
+        static let bufferSize: UInt32 = 1024
+
+        /// Hauteur max du beam vocal discret
+        static let beamMaxHeight: CGFloat = 4
+    }
+
     // MARK: - Notch
 
     enum Notch {

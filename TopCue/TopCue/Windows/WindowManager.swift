@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import AVFoundation
 import SwiftUI
 
 /// Gere la creation et la configuration de la fenetre flottante du prompteur.
@@ -32,6 +33,12 @@ final class WindowManager {
     /// Etat partage du prompteur.
     let prompterState = PrompterState()
 
+    /// Detecteur vocal partage avec la vue.
+    let voiceDetector = VoiceDetector()
+
+    @ObservationIgnored
+    private let audioEngine = AudioEngine()
+
     /// La fenetre est-elle actuellement affichee.
     var isPanelVisible: Bool {
         panel?.isVisible ?? false
@@ -46,8 +53,13 @@ final class WindowManager {
         }
     }
 
+    init() {
+        configureAudioPipeline()
+    }
+
     @MainActor
     deinit {
+        stopVoiceMode()
         removeObservers()
     }
 
@@ -68,12 +80,14 @@ final class WindowManager {
         panel.makeKeyAndOrderFront(nil)
         prompterState.isWindowVisible = true
         prompterState.play()
+        synchronizeVoiceModeState()
     }
 
     /// Ferme la fenetre du prompteur.
     func hidePrompter() {
         prompterState.stop()
         prompterState.isWindowVisible = false
+        stopVoiceMode()
         panel?.orderOut(nil)
     }
 
@@ -96,6 +110,19 @@ final class WindowManager {
         applySharingVisibility(panel: panel)
     }
 
+    /// Active ou desactive le mode voix.
+    func toggleVoiceMode() {
+        if prompterState.voiceModeEnabled {
+            prompterState.setVoiceModeEnabled(false)
+            stopVoiceMode()
+            return
+        }
+
+        Task { @MainActor [weak self] in
+            await self?.enableVoiceMode()
+        }
+    }
+
     // MARK: - Panel Lifecycle
 
     private func createPanel() {
@@ -103,8 +130,12 @@ final class WindowManager {
 
         let prompterView = PrompterView(
             state: prompterState,
+            voiceDetector: voiceDetector,
             onToggleInvisibility: { [weak self] in
                 self?.toggleInvisibility()
+            },
+            onToggleVoiceMode: { [weak self] in
+                self?.toggleVoiceMode()
             }
         )
         let hostingView = NSHostingView(rootView: prompterView)
@@ -117,6 +148,80 @@ final class WindowManager {
         registerScreenParametersObserver()
 
         applyPanelConfiguration(panel: panel)
+    }
+
+    // MARK: - Voice
+
+    private func configureAudioPipeline() {
+        audioEngine.onLevel = { [weak self] level in
+            self?.voiceDetector.consume(level: level)
+        }
+    }
+
+    private func synchronizeVoiceModeState() {
+        guard prompterState.voiceModeEnabled else { return }
+
+        Task { @MainActor [weak self] in
+            await self?.enableVoiceMode()
+        }
+    }
+
+    private func enableVoiceMode() async {
+        guard prompterState.isWindowVisible else {
+            prompterState.setVoiceModeEnabled(true)
+            return
+        }
+
+        let isAllowed = await ensureMicrophonePermission()
+        guard isAllowed else {
+            prompterState.setVoiceModeEnabled(false)
+            stopVoiceMode()
+            return
+        }
+
+        do {
+            try audioEngine.start()
+            prompterState.setVoiceModeEnabled(true)
+            voiceDetector.setMicrophonePermissionMessage(nil)
+        } catch {
+            prompterState.setVoiceModeEnabled(false)
+            voiceDetector.setMicrophonePermissionMessage("Microphone indisponible")
+            stopVoiceMode()
+        }
+    }
+
+    private func stopVoiceMode() {
+        audioEngine.stop()
+        voiceDetector.reset()
+    }
+
+    private func ensureMicrophonePermission() async -> Bool {
+        let status = AVCaptureDevice.authorizationStatus(for: .audio)
+
+        switch status {
+        case .authorized:
+            voiceDetector.setMicrophonePermissionMessage(nil)
+            return true
+        case .notDetermined:
+            let granted = await requestMicrophoneAccess()
+            let message = granted ? nil : "Acces micro refuse. Ouvrez Reglages Systeme."
+            voiceDetector.setMicrophonePermissionMessage(message)
+            return granted
+        case .denied, .restricted:
+            voiceDetector.setMicrophonePermissionMessage("Autorisez le micro dans Reglages Systeme.")
+            return false
+        @unknown default:
+            voiceDetector.setMicrophonePermissionMessage("Etat de permission micro inconnu.")
+            return false
+        }
+    }
+
+    private func requestMicrophoneAccess() async -> Bool {
+        await withCheckedContinuation { continuation in
+            AVCaptureDevice.requestAccess(for: .audio) { granted in
+                continuation.resume(returning: granted)
+            }
+        }
     }
 
     private func applyPanelConfiguration(panel: FloatingPanel) {

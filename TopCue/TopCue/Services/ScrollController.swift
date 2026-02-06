@@ -19,8 +19,15 @@ final class ScrollController {
     /// Reference vers l'etat du prompteur
     private weak var state: PrompterState?
 
-    init(state: PrompterState) {
+    /// Reference vers l'etat du detecteur vocal
+    private weak var voiceDetector: VoiceDetector?
+
+    /// Facteur de vitesse effectif (0...1) pour transitions douces.
+    private var velocityFactor: CGFloat = 0
+
+    init(state: PrompterState, voiceDetector: VoiceDetector? = nil) {
         self.state = state
+        self.voiceDetector = voiceDetector
     }
 
     /// Demarre le timer de defilement
@@ -53,8 +60,28 @@ final class ScrollController {
     // MARK: - Private
 
     private func tick() {
-        guard let state, state.isPlaying else { return }
-        state.scrollOffset += state.speed * Constants.Prompter.frameRate
+        guard let state else { return }
+        guard state.isPlaying else {
+            velocityFactor = 0
+            return
+        }
+
+        if !state.voiceModeEnabled {
+            velocityFactor = 1
+            state.scrollOffset += state.speed * Constants.Prompter.frameRate
+            return
+        }
+
+        let targetVelocity: CGFloat = voiceDetector?.isSpeaking == true ? 1 : 0
+        velocityFactor += (targetVelocity - velocityFactor) * Constants.Voice.scrollEasingFactor
+
+        if targetVelocity == 0,
+           velocityFactor < Constants.Voice.minVelocityFactor {
+            velocityFactor = 0
+        }
+
+        guard velocityFactor > 0 else { return }
+        state.scrollOffset += state.speed * Constants.Prompter.frameRate * velocityFactor
     }
 
     // AnyCancellable se cancel automatiquement a la deallocation

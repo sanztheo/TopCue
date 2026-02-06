@@ -64,6 +64,15 @@ struct TopCueApp: App {
                 }
                 .keyboardShortcut("i", modifiers: [.command, .shift])
 
+                Button(
+                    windowManager.prompterState.voiceModeEnabled
+                        ? "Desactiver Mode Voix"
+                        : "Activer Mode Voix"
+                ) {
+                    windowManager.toggleVoiceMode()
+                }
+                .keyboardShortcut("v", modifiers: [.command, .shift])
+
                 Divider()
 
                 Button("Fermer prompteur") {

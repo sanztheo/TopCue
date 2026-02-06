@@ -30,6 +30,7 @@ final class PrompterState {
         static let mode = "prompter.mode"
         static let speed = "prompter.speed"
         static let isInvisible = "prompter.isInvisible"
+        static let voiceModeEnabled = Constants.Voice.modeEnabledKey
     }
 
     @ObservationIgnored
@@ -55,6 +56,9 @@ final class PrompterState {
 
     /// Controle si la fenetre est exclue du partage d'ecran
     var isInvisible: Bool = true
+
+    /// Active le mode de defilement pilote par la voix.
+    var voiceModeEnabled: Bool = false
 
     /// Taille courante du conteneur visible du prompteur
     var panelSize: CGSize = CGSize(
@@ -146,6 +150,15 @@ final class PrompterState {
         persistInvisibility()
     }
 
+    func toggleVoiceMode() {
+        setVoiceModeEnabled(!voiceModeEnabled)
+    }
+
+    func setVoiceModeEnabled(_ enabled: Bool) {
+        voiceModeEnabled = enabled
+        persistVoiceModeEnabled()
+    }
+
     func increaseSpeed() {
         speed = min(speed + Constants.Prompter.speedStep, Constants.Prompter.maxSpeed)
         persistSpeed()
@@ -173,6 +186,10 @@ final class PrompterState {
             isInvisible = defaults.bool(forKey: StorageKey.isInvisible)
         }
 
+        if defaults.object(forKey: StorageKey.voiceModeEnabled) != nil {
+            voiceModeEnabled = defaults.bool(forKey: StorageKey.voiceModeEnabled)
+        }
+
         if let storedSpeed = defaults.object(forKey: StorageKey.speed) as? Double {
             let clampedSpeed = min(
                 max(storedSpeed, Double(Constants.Prompter.minSpeed)),
@@ -192,5 +209,9 @@ final class PrompterState {
 
     private func persistSpeed() {
         defaults.set(Double(speed), forKey: StorageKey.speed)
+    }
+
+    private func persistVoiceModeEnabled() {
+        defaults.set(voiceModeEnabled, forKey: StorageKey.voiceModeEnabled)
     }
 }
