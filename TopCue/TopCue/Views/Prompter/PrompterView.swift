@@ -108,7 +108,6 @@ struct PrompterView: View {
                         .offset(y: -snappedScrollOffset)
                 }
                 .scrollDisabled(true)
-                .drawingGroup()
                 .mask(textFadeMask)
             } else {
                 Text("Aucun script")
