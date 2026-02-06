@@ -24,6 +24,9 @@ final class VoiceDetector {
     @ObservationIgnored
     private var silenceWorkItem: DispatchWorkItem?
 
+    @ObservationIgnored
+    private var debugSampleCounter = 0
+
     /// Etat vocal courant deduit des niveaux audio.
     private(set) var activityState: VoiceActivityState = .silence
 
@@ -66,9 +69,11 @@ final class VoiceDetector {
     /// - Parameter level: Niveau RMS normalise entre 0.0 et 1.0.
     func consume(level: Float) {
         let clampedLevel = min(max(level, 0), 1)
+        debugSampleCounter += 1
         hasReceivedSamples = true
         audioLevel = clampedLevel
         peakAudioLevel = max(peakAudioLevel, clampedLevel)
+        debugLogLevelIfNeeded(level: clampedLevel)
 
         if clampedLevel >= threshold {
             microphonePermissionMessage = nil
@@ -87,6 +92,7 @@ final class VoiceDetector {
         audioLevel = 0
         hasReceivedSamples = false
         peakAudioLevel = 0
+        debugSampleCounter = 0
     }
 
     /// Stocke un message de permission refusee pour l'affichage UI.
@@ -103,6 +109,7 @@ final class VoiceDetector {
 
         guard activityState != .speaking else { return }
         activityState = .speaking
+        debugLog("state -> speaking (level=\(audioLevel), threshold=\(threshold))")
     }
 
     private func scheduleSilenceTransitionIfNeeded() {
@@ -115,6 +122,7 @@ final class VoiceDetector {
             guard let self else { return }
             self.activityState = .silence
             self.silenceWorkItem = nil
+            self.debugLog("state -> silence (level=\(self.audioLevel), threshold=\(self.threshold))")
         }
 
         silenceWorkItem = workItem
@@ -136,5 +144,24 @@ final class VoiceDetector {
         }
 
         defaults.set(clamped, forKey: Constants.Voice.sensitivityKey)
+    }
+
+    private func debugLogLevelIfNeeded(level: Float) {
+        if debugSampleCounter == 1 {
+            debugLog("first sample level=\(level), threshold=\(threshold)")
+            return
+        }
+
+        guard debugSampleCounter % 120 == 0 else { return }
+        debugLog(
+            "samples=\(debugSampleCounter) level=\(level) peak=\(peakAudioLevel) " +
+            "threshold=\(threshold) speaking=\(isSpeaking)"
+        )
+    }
+
+    private func debugLog(_ message: String) {
+#if DEBUG
+        print("[VoiceDebug] VoiceDetector \(message)")
+#endif
     }
 }

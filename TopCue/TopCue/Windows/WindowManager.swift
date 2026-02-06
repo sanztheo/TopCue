@@ -9,6 +9,14 @@ import AppKit
 import AVFoundation
 import SwiftUI
 
+nonisolated private func makeVoiceLevelHandler(voiceDetector: VoiceDetector) -> AudioEngine.LevelHandler {
+    return { level in
+        Task { @MainActor in
+            voiceDetector.consume(level: level)
+        }
+    }
+}
+
 /// Gere la creation et la configuration de la fenetre flottante du prompteur.
 @MainActor
 @Observable
@@ -156,11 +164,7 @@ final class WindowManager {
     // MARK: - Voice
 
     private func configureAudioPipeline() {
-        audioEngine.onLevel = { [weak self] level in
-            DispatchQueue.main.async { [weak self] in
-                self?.voiceDetector.consume(level: level)
-            }
-        }
+        audioEngine.onLevel = makeVoiceLevelHandler(voiceDetector: voiceDetector)
     }
 
     private func synchronizeVoiceModeState() {
@@ -172,11 +176,9 @@ final class WindowManager {
     }
 
     private func enableVoiceMode() async {
-        guard prompterState.isWindowVisible else {
-            prompterState.setVoiceModeEnabled(true)
-            return
-        }
-
+#if DEBUG
+        print("[VoiceDebug] WindowManager.enableVoiceMode requested")
+#endif
         let isAllowed = await ensureMicrophonePermission()
         guard isAllowed else {
             prompterState.setVoiceModeEnabled(false)
@@ -187,17 +189,28 @@ final class WindowManager {
         do {
             try audioEngine.start()
             prompterState.setVoiceModeEnabled(true)
-            prompterState.play()
+            if prompterState.isWindowVisible {
+                prompterState.play()
+            }
             voiceDetector.setMicrophonePermissionMessage(nil)
             startVoiceSignalProbe()
+#if DEBUG
+            print("[VoiceDebug] WindowManager.enableVoiceMode started")
+#endif
         } catch {
             prompterState.setVoiceModeEnabled(false)
             voiceDetector.setMicrophonePermissionMessage("Microphone indisponible")
             stopVoiceMode()
+#if DEBUG
+            print("[VoiceDebug] WindowManager.enableVoiceMode failed error=\(error)")
+#endif
         }
     }
 
     private func stopVoiceMode() {
+#if DEBUG
+        print("[VoiceDebug] WindowManager.stopVoiceMode")
+#endif
         voiceSignalProbeTask?.cancel()
         voiceSignalProbeTask = nil
         audioEngine.stop()
@@ -217,6 +230,9 @@ final class WindowManager {
                 self.voiceDetector.setMicrophonePermissionMessage(
                     "Aucun flux micro. Verifiez Reglages Systeme > Son > Entree."
                 )
+#if DEBUG
+                print("[VoiceDebug] Probe: aucun sample recu")
+#endif
                 return
             }
 
@@ -225,23 +241,33 @@ final class WindowManager {
                 self.voiceDetector.setMicrophonePermissionMessage(
                     "Signal micro faible. Montez l'entree ou baissez la sensibilite."
                 )
+#if DEBUG
+                print(
+                    "[VoiceDebug] Probe: signal faible peak=\(self.voiceDetector.peakAudioLevel) " +
+                    "minimum=\(minimumUsefulLevel)"
+                )
+#endif
             }
         }
     }
 
     private func ensureMicrophonePermission() async -> Bool {
-        let status = AVCaptureDevice.authorizationStatus(for: .audio)
+        let status = AVAudioApplication.shared.recordPermission
+
+#if DEBUG
+        print("[VoiceDebug] Permission status=\(status.rawValue)")
+#endif
 
         switch status {
-        case .authorized:
+        case .granted:
             voiceDetector.setMicrophonePermissionMessage(nil)
             return true
-        case .notDetermined:
+        case .undetermined:
             let granted = await requestMicrophoneAccess()
             let message = granted ? nil : "Acces micro refuse. Ouvrez Reglages Systeme."
             voiceDetector.setMicrophonePermissionMessage(message)
             return granted
-        case .denied, .restricted:
+        case .denied:
             voiceDetector.setMicrophonePermissionMessage("Autorisez le micro dans Reglages Systeme.")
             return false
         @unknown default:
@@ -252,7 +278,7 @@ final class WindowManager {
 
     private func requestMicrophoneAccess() async -> Bool {
         await withCheckedContinuation { continuation in
-            AVCaptureDevice.requestAccess(for: .audio) { granted in
+            AVAudioApplication.requestRecordPermission { granted in
                 continuation.resume(returning: granted)
             }
         }

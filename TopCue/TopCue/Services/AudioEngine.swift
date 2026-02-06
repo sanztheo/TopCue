@@ -16,7 +16,7 @@ final class AudioEngine {
     // MARK: - Properties
 
     /// Callback appelee a chaque buffer avec un niveau RMS entre 0.0 et 1.0.
-    /// Le callback est execute sur la queue audio du tap (pas sur le MainActor).
+    /// Le callback est execute sur la queue audio du tap.
     var onLevel: LevelHandler?
 
     /// Indique si le moteur audio est actif.
@@ -43,16 +43,22 @@ final class AudioEngine {
               outputFormat.sampleRate > 0 else {
             throw AudioEngineError.microphoneUnavailable
         }
+
+#if DEBUG
+        print(
+            "[VoiceDebug] AudioEngine.start format channels=\(outputFormat.channelCount) " +
+            "sampleRate=\(outputFormat.sampleRate) interleaved=\(outputFormat.isInterleaved)"
+        )
+#endif
         inputNode.removeTap(onBus: 0)
+        let tapHandler = Self.makeTapHandler(levelBoost: levelBoost, levelHandler: levelHandler)
 
         inputNode.installTap(
             onBus: 0,
             bufferSize: AVAudioFrameCount(Constants.Voice.bufferSize),
-            format: outputFormat
-        ) { buffer, _ in
-            let level = Self.computeRmsLevel(from: buffer, levelBoost: levelBoost)
-            Self.emit(level: level, to: levelHandler)
-        }
+            format: outputFormat,
+            block: tapHandler
+        )
 
         isTapInstalled = true
         engine.prepare()
@@ -62,6 +68,10 @@ final class AudioEngine {
     /// Arrete la capture micro et nettoie le tap audio.
     func stop() {
         guard engine.isRunning || isTapInstalled else { return }
+
+#if DEBUG
+        print("[VoiceDebug] AudioEngine.stop")
+#endif
 
         if isTapInstalled {
             engine.inputNode.removeTap(onBus: 0)
@@ -73,6 +83,16 @@ final class AudioEngine {
     }
 
     // MARK: - Private
+
+    nonisolated private static func makeTapHandler(
+        levelBoost: Float,
+        levelHandler: LevelHandler?
+    ) -> AVAudioNodeTapBlock {
+        return { buffer, _ in
+            let level = Self.computeRmsLevel(from: buffer, levelBoost: levelBoost)
+            Self.emit(level: level, to: levelHandler)
+        }
+    }
 
     nonisolated private static func computeRmsLevel(
         from buffer: AVAudioPCMBuffer,
