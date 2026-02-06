@@ -1,6 +1,6 @@
-# Notchie - Documentation
+# TopCue - Documentation
 
-**Notchie** est un teleprompteur macOS open-source qui affiche du texte dans/sous le notch du MacBook, permettant un contact visuel naturel avec la camera.
+**TopCue** est un teleprompteur macOS open-source qui affiche du texte dans/sous le notch du MacBook, permettant un contact visuel naturel avec la camera.
 
 Clone open-source de [Moody](https://moody.mjarosz.com/).
 

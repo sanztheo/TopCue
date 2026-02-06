@@ -1,4 +1,4 @@
-# Roadmap - Notchie
+# Roadmap - TopCue
 
 Suivi de progression du projet. Chaque tache est marquee : fait, en cours, ou a faire.
 
@@ -18,7 +18,7 @@ Suivi de progression du projet. Chaque tache est marquee : fait, en cours, ou a 
 | 1.6 | `WindowManager` - gestion lifecycle panel + hosting SwiftUI | ✅ Done |
 | 1.7 | `PrompterView` - texte defilant, fond noir, controles play/pause/vitesse | ✅ Done |
 | 1.8 | `EditorView` + `ScriptListView` - editeur + sidebar liste scripts | ✅ Done |
-| 1.9 | `NotchieApp` - entry point, WindowGroup, menu Presentation, raccourcis | ✅ Done |
+| 1.9 | `TopCueApp` - entry point, WindowGroup, menu Presentation, raccourcis | ✅ Done |
 | 1.10 | `Constants` - toutes les constantes centralisees | ✅ Done |
 
 ---

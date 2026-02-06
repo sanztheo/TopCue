@@ -1,4 +1,4 @@
-# References - Notchie
+# References - TopCue
 
 Projets open-source, articles, et documentation officielle.
 
@@ -104,6 +104,6 @@ Projets open-source, articles, et documentation officielle.
 ## 4. App de reference
 
 - [Moody - Your discreet notch prompter](https://moody.mjarosz.com/) - $59, l'app qu'on clone en open-source
-- [Notchie.app](https://www.notchie.app/) - Autre teleprompter notch (nom similaire, attention)
+- [TopCue.app](https://www.notchie.app/) - Autre teleprompter notch (nom similaire, attention)
 
-> **Note** : Il existe deja une app "Notchie" sur le marche. Si le nom pose un probleme de trademark, envisager un rename (ex: NotchCue, Promptch, GhostCue).
+> **Note** : Il existe deja une app "TopCue" sur le marche. Si le nom pose un probleme de trademark, envisager un rename (ex: NotchCue, Promptch, GhostCue).

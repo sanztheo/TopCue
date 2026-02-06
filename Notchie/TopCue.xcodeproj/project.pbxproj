@@ -12,37 +12,37 @@
 			containerPortal = AADB0BDE2F35F74C00734726 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = AADB0BE52F35F74C00734726;
-			remoteInfo = Notchie;
+			remoteInfo = TopCue;
 		};
 		AADB0C002F35F74D00734726 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AADB0BDE2F35F74C00734726 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = AADB0BE52F35F74C00734726;
-			remoteInfo = Notchie;
+			remoteInfo = TopCue;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AADB0BE62F35F74C00734726 /* Notchie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notchie.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		AADB0BF52F35F74D00734726 /* NotchieTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotchieTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AADB0BFF2F35F74D00734726 /* NotchieUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotchieUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AADB0BE62F35F74C00734726 /* TopCue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TopCue.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AADB0BF52F35F74D00734726 /* TopCueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TopCueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AADB0BFF2F35F74D00734726 /* TopCueUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TopCueUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		AADB0BE82F35F74C00734726 /* Notchie */ = {
+		AADB0BE82F35F74C00734726 /* TopCue */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Notchie;
+			path = TopCue;
 			sourceTree = "<group>";
 		};
-		AADB0BF82F35F74D00734726 /* NotchieTests */ = {
+		AADB0BF82F35F74D00734726 /* TopCueTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NotchieTests;
+			path = TopCueTests;
 			sourceTree = "<group>";
 		};
-		AADB0C022F35F74D00734726 /* NotchieUITests */ = {
+		AADB0C022F35F74D00734726 /* TopCueUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NotchieUITests;
+			path = TopCueUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		AADB0BDD2F35F74C00734726 = {
 			isa = PBXGroup;
 			children = (
-				AADB0BE82F35F74C00734726 /* Notchie */,
-				AADB0BF82F35F74D00734726 /* NotchieTests */,
-				AADB0C022F35F74D00734726 /* NotchieUITests */,
+				AADB0BE82F35F74C00734726 /* TopCue */,
+				AADB0BF82F35F74D00734726 /* TopCueTests */,
+				AADB0C022F35F74D00734726 /* TopCueUITests */,
 				AADB0BE72F35F74C00734726 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		AADB0BE72F35F74C00734726 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AADB0BE62F35F74C00734726 /* Notchie.app */,
-				AADB0BF52F35F74D00734726 /* NotchieTests.xctest */,
-				AADB0BFF2F35F74D00734726 /* NotchieUITests.xctest */,
+				AADB0BE62F35F74C00734726 /* TopCue.app */,
+				AADB0BF52F35F74D00734726 /* TopCueTests.xctest */,
+				AADB0BFF2F35F74D00734726 /* TopCueUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AADB0BE52F35F74C00734726 /* Notchie */ = {
+		AADB0BE52F35F74C00734726 /* TopCue */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AADB0C092F35F74D00734726 /* Build configuration list for PBXNativeTarget "Notchie" */;
+			buildConfigurationList = AADB0C092F35F74D00734726 /* Build configuration list for PBXNativeTarget "TopCue" */;
 			buildPhases = (
 				AADB0BE22F35F74C00734726 /* Sources */,
 				AADB0BE32F35F74C00734726 /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				AADB0BE82F35F74C00734726 /* Notchie */,
+				AADB0BE82F35F74C00734726 /* TopCue */,
 			);
-			name = Notchie;
+			name = TopCue;
 			packageProductDependencies = (
 			);
-			productName = Notchie;
-			productReference = AADB0BE62F35F74C00734726 /* Notchie.app */;
+			productName = TopCue;
+			productReference = AADB0BE62F35F74C00734726 /* TopCue.app */;
 			productType = "com.apple.product-type.application";
 		};
-		AADB0BF42F35F74D00734726 /* NotchieTests */ = {
+		AADB0BF42F35F74D00734726 /* TopCueTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AADB0C0C2F35F74D00734726 /* Build configuration list for PBXNativeTarget "NotchieTests" */;
+			buildConfigurationList = AADB0C0C2F35F74D00734726 /* Build configuration list for PBXNativeTarget "TopCueTests" */;
 			buildPhases = (
 				AADB0BF12F35F74D00734726 /* Sources */,
 				AADB0BF22F35F74D00734726 /* Frameworks */,
@@ -131,18 +131,18 @@
 				AADB0BF72F35F74D00734726 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				AADB0BF82F35F74D00734726 /* NotchieTests */,
+				AADB0BF82F35F74D00734726 /* TopCueTests */,
 			);
-			name = NotchieTests;
+			name = TopCueTests;
 			packageProductDependencies = (
 			);
-			productName = NotchieTests;
-			productReference = AADB0BF52F35F74D00734726 /* NotchieTests.xctest */;
+			productName = TopCueTests;
+			productReference = AADB0BF52F35F74D00734726 /* TopCueTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		AADB0BFE2F35F74D00734726 /* NotchieUITests */ = {
+		AADB0BFE2F35F74D00734726 /* TopCueUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AADB0C0F2F35F74D00734726 /* Build configuration list for PBXNativeTarget "NotchieUITests" */;
+			buildConfigurationList = AADB0C0F2F35F74D00734726 /* Build configuration list for PBXNativeTarget "TopCueUITests" */;
 			buildPhases = (
 				AADB0BFB2F35F74D00734726 /* Sources */,
 				AADB0BFC2F35F74D00734726 /* Frameworks */,
@@ -154,13 +154,13 @@
 				AADB0C012F35F74D00734726 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				AADB0C022F35F74D00734726 /* NotchieUITests */,
+				AADB0C022F35F74D00734726 /* TopCueUITests */,
 			);
-			name = NotchieUITests;
+			name = TopCueUITests;
 			packageProductDependencies = (
 			);
-			productName = NotchieUITests;
-			productReference = AADB0BFF2F35F74D00734726 /* NotchieUITests.xctest */;
+			productName = TopCueUITests;
+			productReference = AADB0BFF2F35F74D00734726 /* TopCueUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = AADB0BE12F35F74C00734726 /* Build configuration list for PBXProject "Notchie" */;
+			buildConfigurationList = AADB0BE12F35F74C00734726 /* Build configuration list for PBXProject "TopCue" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AADB0BE52F35F74C00734726 /* Notchie */,
-				AADB0BF42F35F74D00734726 /* NotchieTests */,
-				AADB0BFE2F35F74D00734726 /* NotchieUITests */,
+				AADB0BE52F35F74C00734726 /* TopCue */,
+				AADB0BF42F35F74D00734726 /* TopCueTests */,
+				AADB0BFE2F35F74D00734726 /* TopCueUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		AADB0BF72F35F74D00734726 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AADB0BE52F35F74C00734726 /* Notchie */;
+			target = AADB0BE52F35F74C00734726 /* TopCue */;
 			targetProxy = AADB0BF62F35F74D00734726 /* PBXContainerItemProxy */;
 		};
 		AADB0C012F35F74D00734726 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AADB0BE52F35F74C00734726 /* Notchie */;
+			target = AADB0BE52F35F74C00734726 /* TopCue */;
 			targetProxy = AADB0C002F35F74D00734726 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -322,7 +322,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = Notchie/Info.plist;
+				INFOPLIST_FILE = TopCue/Info.plist;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -381,7 +381,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = Notchie/Info.plist;
+				INFOPLIST_FILE = TopCue/Info.plist;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -396,7 +396,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Notchie/Notchie.entitlements;
+				CODE_SIGN_ENTITLEMENTS = TopCue/TopCue.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -413,7 +413,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sanz.Notchie;
+				PRODUCT_BUNDLE_IDENTIFIER = sanz.TopCue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -430,7 +430,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Notchie/Notchie.entitlements;
+				CODE_SIGN_ENTITLEMENTS = TopCue/TopCue.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -447,7 +447,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sanz.Notchie;
+				PRODUCT_BUNDLE_IDENTIFIER = sanz.TopCue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -469,14 +469,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sanz.NotchieTests;
+				PRODUCT_BUNDLE_IDENTIFIER = sanz.TopCueTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Notchie.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Notchie";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TopCue.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TopCue";
 			};
 			name = Debug;
 		};
@@ -490,14 +490,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sanz.NotchieTests;
+				PRODUCT_BUNDLE_IDENTIFIER = sanz.TopCueTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Notchie.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Notchie";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TopCue.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TopCue";
 			};
 			name = Release;
 		};
@@ -509,14 +509,14 @@
 				DEVELOPMENT_TEAM = TLTGM73AGZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sanz.NotchieUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = sanz.TopCueUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = Notchie;
+				TEST_TARGET_NAME = TopCue;
 			};
 			name = Debug;
 		};
@@ -528,21 +528,21 @@
 				DEVELOPMENT_TEAM = TLTGM73AGZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sanz.NotchieUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = sanz.TopCueUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = Notchie;
+				TEST_TARGET_NAME = TopCue;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AADB0BE12F35F74C00734726 /* Build configuration list for PBXProject "Notchie" */ = {
+		AADB0BE12F35F74C00734726 /* Build configuration list for PBXProject "TopCue" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AADB0C072F35F74D00734726 /* Debug */,
@@ -551,7 +551,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AADB0C092F35F74D00734726 /* Build configuration list for PBXNativeTarget "Notchie" */ = {
+		AADB0C092F35F74D00734726 /* Build configuration list for PBXNativeTarget "TopCue" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AADB0C0A2F35F74D00734726 /* Debug */,
@@ -560,7 +560,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AADB0C0C2F35F74D00734726 /* Build configuration list for PBXNativeTarget "NotchieTests" */ = {
+		AADB0C0C2F35F74D00734726 /* Build configuration list for PBXNativeTarget "TopCueTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AADB0C0D2F35F74D00734726 /* Debug */,
@@ -569,7 +569,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AADB0C0F2F35F74D00734726 /* Build configuration list for PBXNativeTarget "NotchieUITests" */ = {
+		AADB0C0F2F35F74D00734726 /* Build configuration list for PBXNativeTarget "TopCueUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AADB0C102F35F74D00734726 /* Debug */,

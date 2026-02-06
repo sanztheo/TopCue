@@ -1,6 +1,6 @@
 # APIs macOS - Reference technique
 
-Toutes les APIs macOS cles necessaires pour Notchie, avec exemples de code Swift.
+Toutes les APIs macOS cles necessaires pour TopCue, avec exemples de code Swift.
 
 ---
 
@@ -336,7 +336,7 @@ final class VoiceDetector {
 <dict>
     <!-- Acces microphone (obligatoire pour voice activation) -->
     <key>NSMicrophoneUsageDescription</key>
-    <string>Notchie utilise le microphone pour detecter votre voix et faire defiler le texte automatiquement.</string>
+    <string>TopCue utilise le microphone pour detecter votre voix et faire defiler le texte automatiquement.</string>
 
     <!-- Pas de safe area compatibility mode (on gere le notch nous-memes) -->
     <key>NSPrefersDisplaySafeAreaCompatibilityMode</key>
@@ -512,7 +512,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct NotchieApp: App {
+struct TopCueApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

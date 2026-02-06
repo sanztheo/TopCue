@@ -1,4 +1,4 @@
-# Features - Notchie
+# Features - TopCue
 
 Les 12 features a implementer, directement basees sur Moody.
 
@@ -267,7 +267,7 @@ Color:     bleu     violet   rouge
 
 ### Implementation
 
-- **Stockage** : SwiftData (SQLite local dans ~/Library/Application Support/Notchie/)
+- **Stockage** : SwiftData (SQLite local dans ~/Library/Application Support/TopCue/)
 - **Pas de reseau** : zero appel HTTP, zero analytics, zero telemetrie
 - **Pas de compte** : pas d'authentification requise
 - **Export** : les scripts sont de simples fichiers texte, exportables en .txt/.md

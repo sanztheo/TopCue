@@ -1,4 +1,4 @@
-# Architecture - Notchie
+# Architecture - TopCue
 
 ## 1. Pourquoi Swift natif (et pas Tauri)
 
@@ -31,7 +31,7 @@
 ## 2. Stack technique
 
 ```
-Notchie.app
+TopCue.app
 |
 |-- SwiftUI (UI Layer)
 |   |-- ContentView          # Vue principale (editeur + controles)
@@ -67,11 +67,11 @@ Notchie.app
 ## 3. Structure Xcode
 
 ```
-Notchie/
-|-- Notchie.xcodeproj
-|-- Notchie/
+TopCue/
+|-- TopCue.xcodeproj
+|-- TopCue/
 |   |-- App/
-|   |   |-- NotchieApp.swift          # @main, Scene definition
+|   |   |-- TopCueApp.swift          # @main, Scene definition
 |   |   +-- AppDelegate.swift         # NSApplicationDelegateAdaptor
 |   |
 |   |-- Views/
@@ -114,7 +114,7 @@ Notchie/
 |   +-- Preview Content/
 |       +-- Preview Assets.xcassets
 |
-|-- NotchieTests/
+|-- TopCueTests/
 |   +-- ...
 |
 +-- docs/                             # Cette documentation

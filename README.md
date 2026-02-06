@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/dependencies-zero-brightgreen?style=flat-square" alt="Zero Dependencies">
 </p>
 
-<h1 align="center">Notchie</h1>
+<h1 align="center">TopCue</h1>
 
 <p align="center">
   <strong>The open-source teleprompter that lives in your MacBook's notch.</strong><br>
@@ -19,13 +19,13 @@
 
 ---
 
-## Why Notchie?
+## Why TopCue?
 
 Most teleprompter apps put your script far from your camera. You end up reading from the bottom of your screen while your eyes drift away from the lens. **Your audience notices.**
 
-Notchie places your script **right next to the camera** — inside the MacBook notch — so your gaze stays natural during calls, recordings, and presentations.
+TopCue places your script **right next to the camera** — inside the MacBook notch — so your gaze stays natural during calls, recordings, and presentations.
 
-| Without Notchie | With Notchie |
+| Without TopCue | With TopCue |
 |:---:|:---:|
 | Eyes wander, reading from notes | Eyes stay near camera, natural delivery |
 
@@ -57,7 +57,7 @@ Notchie places your script **right next to the camera** — inside the MacBook n
 - **Settings Panel** — Centralized preferences for all options
 - **Menu Bar Widget** — Quick access from the menu bar
 - **Mirror Mode** — Reversed text for physical teleprompter displays
-- **iPhone Remote Control** — Control Notchie from your phone via Multipeer Connectivity
+- **iPhone Remote Control** — Control TopCue from your phone via Multipeer Connectivity
 
 ## Getting Started
 
@@ -73,20 +73,20 @@ Notchie places your script **right next to the camera** — inside the MacBook n
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/Notchie.git
-cd Notchie
+git clone https://github.com/YOUR_USERNAME/TopCue.git
+cd TopCue
 
 # Open in Xcode
-open Notchie/Notchie.xcodeproj
+open TopCue/TopCue.xcodeproj
 
 # Build and run (⌘R)
 ```
 
-> **Note:** Notchie uses only Apple-native frameworks — no external dependencies, no package managers, no setup headaches.
+> **Note:** TopCue uses only Apple-native frameworks — no external dependencies, no package managers, no setup headaches.
 
 ## How It Works
 
-Notchie uses a transparent `NSPanel` positioned at the top of your screen, visually fusing with the MacBook notch through a custom `NotchShape` clip. The result: text appears to scroll out of the notch itself.
+TopCue uses a transparent `NSPanel` positioned at the top of your screen, visually fusing with the MacBook notch through a custom `NotchShape` clip. The result: text appears to scroll out of the notch itself.
 
 ```
 ┌─────────────────────────────────────────┐
@@ -94,7 +94,7 @@ Notchie uses a transparent `NSPanel` positioned at the top of your screen, visua
 │           │  ■■■■■■■  │                 │
 │           └─────┬─────┘                 │
 │           ┌─────┴─────┐                 │
-│           │  Notchie   │                 │  ← Transparent panel with text
+│           │  TopCue    │                 │  ← Transparent panel with text
 │           │  scrolling │                 │
 │           │   text...  │                 │
 │           └───────────┘                 │
@@ -106,9 +106,9 @@ Notchie uses a transparent `NSPanel` positioned at the top of your screen, visua
 ### Architecture
 
 ```
-Notchie/
+TopCue/
 ├── App/
-│   ├── NotchieApp.swift          # Entry point, scenes & keyboard shortcuts
+│   ├── TopCueApp.swift           # Entry point, scenes & keyboard shortcuts
 │   └── AppDelegate.swift         # NSApplicationDelegate lifecycle
 ├── Models/
 │   ├── Script.swift              # SwiftData model for scripts
@@ -164,8 +164,8 @@ See the full [roadmap](docs/roadmap.md) for detailed task tracking.
 
 ## Comparison with Alternatives
 
-| Feature | Notchie | [Moody](https://moody.mjarosz.com/) ($59) | [Notchie.app](https://notchie.app) ($30) | [NotchPrompter](https://notchprompter.com/) (Free) |
-|---------|---------|-------|-----------|---------------|
+| Feature | TopCue | [Moody](https://moody.mjarosz.com/) ($59) | [Notchie](https://notchie.app) ($30) | [NotchPrompter](https://notchprompter.com/) (Free) |
+|---------|--------|-------|---------|---------------|
 | Open Source | ✅ | ❌ | ❌ | ❌* |
 | Notch Integration | ✅ | ✅ | ✅ | ✅ |
 | Voice Activation | 🔜 | ✅ | ✅ | ✅ |
@@ -180,7 +180,7 @@ See the full [roadmap](docs/roadmap.md) for detailed task tracking.
 
 ## Contributing
 
-Contributions are welcome! Notchie is in active development and there's plenty to do.
+Contributions are welcome! TopCue is in active development and there's plenty to do.
 
 1. **Fork** the repository
 2. **Create** a feature branch (`git checkout -b feature/voice-activation`)
@@ -199,7 +199,7 @@ Please follow the [Swift API Design Guidelines](https://www.swift.org/documentat
 
 ## Privacy
 
-Notchie is built with privacy as a core principle:
+TopCue is built with privacy as a core principle:
 
 - **No network requests** — the app never connects to the internet
 - **No analytics or telemetry** — zero tracking of any kind
@@ -217,5 +217,5 @@ Free to use, modify, and distribute. Commercial use allowed.
 
 <p align="center">
   <strong>Built with SwiftUI & AppKit for macOS</strong><br>
-  <sub>If Notchie helps you present better, consider giving it a ⭐</sub>
+  <sub>If TopCue helps you present better, consider giving it a ⭐</sub>
 </p>

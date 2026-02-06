@@ -1,4 +1,4 @@
-# Plan d'implementation - Notchie
+# Plan d'implementation - TopCue
 
 Implementation en 4 phases, de MVP a feature-complete.
 
