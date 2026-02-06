@@ -35,6 +35,7 @@ struct NotionSettingsPopover: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             header
+            previewSection
             displaySection
             voiceSection
             sharingSection
@@ -78,6 +79,24 @@ struct NotionSettingsPopover: View {
             }
 
             colorPresets
+        }
+    }
+
+    private var previewSection: some View {
+        sectionCard(title: "Apercu") {
+            previewCanvas
+
+            HStack(spacing: 8) {
+                Text("Mise a jour en direct")
+                    .font(.system(size: 10))
+                    .foregroundStyle(NotionTheme.secondaryText)
+
+                Spacer()
+
+                Text(state.isFloatingMode ? "Mode Floating" : "Mode Notch")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(NotionTheme.tertiaryText)
+            }
         }
     }
 
@@ -157,6 +176,37 @@ struct NotionSettingsPopover: View {
                 .help(preset.name)
             }
         }
+    }
+
+    private var previewCanvas: some View {
+        ZStack {
+            Color.black
+
+            VStack(spacing: 0) {
+                if !state.isFloatingMode {
+                    Color.clear.frame(height: 18)
+                }
+
+                Text("TopCue garde vos yeux pres de la camera")
+                    .font(previewFont)
+                    .foregroundStyle(color(forHex: textColorHex))
+                    .multilineTextAlignment(.center)
+                    .lineSpacing(2)
+                    .padding(.horizontal, 14)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+
+                if state.voiceModeEnabled {
+                    VoiceBeamView(audioLevel: previewAudioLevel)
+                        .padding(.bottom, 6)
+                }
+            }
+        }
+        .frame(height: 84)
+        .clipShape(previewShape)
+        .overlay(
+            previewShape
+                .stroke(.white.opacity(0.08), lineWidth: 1)
+        )
     }
 
     private func sectionCard<Content: View>(
@@ -243,6 +293,30 @@ struct NotionSettingsPopover: View {
         default:
             return "Faible"
         }
+    }
+
+    private var previewFont: Font {
+        let size = min(max(fontSize * 0.55, 12), 24)
+        return .system(size: size, weight: .medium, design: .monospaced)
+    }
+
+    private var previewAudioLevel: Float {
+        guard state.voiceModeEnabled else { return 0 }
+        let level = 0.25 + ((1 - voiceDetector.sensitivity) * 0.6)
+        return Float(min(max(level, 0), 1))
+    }
+
+    private var previewShape: AnyShape {
+        if state.isFloatingMode {
+            return AnyShape(RoundedRectangle(cornerRadius: Constants.Floating.cornerRadius, style: .continuous))
+        }
+
+        return AnyShape(
+            NotchShape(
+                topCornerRadius: Constants.Notch.topCornerRadius,
+                bottomCornerRadius: Constants.Notch.bottomCornerRadius
+            )
+        )
     }
 
     // MARK: - Color Helpers
