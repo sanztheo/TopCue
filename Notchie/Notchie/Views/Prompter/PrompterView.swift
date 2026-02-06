@@ -45,34 +45,31 @@ struct PrompterView: View {
     /// Le contenu noir qui fusionne avec le notch physique
     private var notchContent: some View {
         ZStack(alignment: .top) {
-            // Texte defilant
+            // Texte defilant - commence juste sous la zone du notch physique
             if let script = state.currentScript {
-                GeometryReader { geometry in
-                    ScrollView(.vertical, showsIndicators: false) {
-                        Text(script.content)
-                            .font(.system(size: fontSize, design: .monospaced))
-                            .foregroundStyle(textColor)
-                            .lineSpacing(Constants.Prompter.lineSpacing)
-                            .padding(.top, Constants.Notch.closedHeight + 8)
-                            .padding(.horizontal, Constants.Notch.horizontalPadding + Constants.Notch.topCornerRadius)
-                            .padding(.bottom, geometry.size.height * 0.6)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .offset(y: -state.scrollOffset)
-                    }
-                    .scrollDisabled(true)
+                ScrollView(.vertical, showsIndicators: false) {
+                    Text(script.content)
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
+                        .foregroundStyle(textColor)
+                        .lineSpacing(4)
+                        .lineLimit(nil)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 16)
+                        .padding(.top, Constants.Notch.physicalHeight + 4)
+                        .padding(.bottom, 200)
+                        .frame(maxWidth: .infinity)
+                        .offset(y: -state.scrollOffset)
                 }
+                .scrollDisabled(true)
             } else {
-                VStack {
-                    Spacer()
-                    Text("Aucun script selectionne")
-                        .font(.title2)
-                        .foregroundStyle(.gray)
-                    Spacer()
-                }
+                Text("Aucun script")
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                    .padding(.top, Constants.Notch.physicalHeight + 8)
             }
 
-            // Controles au hover
-            if isHovering || !state.isPlaying {
+            // Controles compacts au hover
+            if isHovering {
                 controlsOverlay
             }
         }
@@ -82,10 +79,6 @@ struct PrompterView: View {
         )
         .background(.black)
         .clipShape(NotchShape())
-        .shadow(
-            color: .black.opacity(isHovering ? 0.6 : 0.3),
-            radius: 10
-        )
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.2)) {
                 isHovering = hovering
@@ -98,46 +91,34 @@ struct PrompterView: View {
     private var controlsOverlay: some View {
         VStack {
             Spacer()
-            HStack(spacing: 20) {
-                // Vitesse -
-                Button {
-                    state.decreaseSpeed()
-                } label: {
-                    Image(systemName: "minus.circle.fill")
-                        .font(.title2)
+            HStack(spacing: 12) {
+                Button { state.decreaseSpeed() } label: {
+                    Image(systemName: "minus.circle.fill").font(.body)
                 }
                 .buttonStyle(.plain)
 
-                // Play / Pause
-                Button {
-                    state.togglePlayPause()
-                } label: {
+                Button { state.togglePlayPause() } label: {
                     Image(systemName: state.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                        .font(.largeTitle)
+                        .font(.title3)
                 }
                 .buttonStyle(.plain)
 
-                // Vitesse +
-                Button {
-                    state.increaseSpeed()
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.title2)
+                Button { state.increaseSpeed() } label: {
+                    Image(systemName: "plus.circle.fill").font(.body)
                 }
                 .buttonStyle(.plain)
 
-                // Indicateur de vitesse
                 Text(state.speedMultiplier)
-                    .font(.caption)
+                    .font(.caption2)
                     .monospacedDigit()
                     .foregroundStyle(.secondary)
             }
             .foregroundStyle(.white)
-            .padding(.vertical, 12)
-            .padding(.horizontal, 20)
-            .background(.black.opacity(0.7))
+            .padding(.vertical, 6)
+            .padding(.horizontal, 12)
+            .background(.black.opacity(0.85))
             .clipShape(Capsule())
-            .padding(.bottom, Constants.Notch.bottomPadding + 8)
+            .padding(.bottom, 6)
         }
         .transition(.opacity)
     }
