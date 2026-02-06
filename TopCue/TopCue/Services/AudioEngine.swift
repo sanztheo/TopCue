@@ -16,6 +16,7 @@ final class AudioEngine {
     // MARK: - Properties
 
     /// Callback appelee a chaque buffer avec un niveau RMS entre 0.0 et 1.0.
+    /// Le callback est execute sur la queue audio du tap (pas sur le MainActor).
     var onLevel: LevelHandler?
 
     /// Indique si le moteur audio est actif.
@@ -35,6 +36,7 @@ final class AudioEngine {
 
         let inputNode = engine.inputNode
         let inputFormat = inputNode.inputFormat(forBus: 0)
+        let levelHandler = onLevel
 
         guard inputFormat.channelCount > 0 else {
             throw AudioEngineError.microphoneUnavailable
@@ -47,10 +49,9 @@ final class AudioEngine {
             onBus: 0,
             bufferSize: AVAudioFrameCount(Constants.Voice.bufferSize),
             format: tapFormat
-        ) { [weak self] buffer, _ in
-            guard let self else { return }
-            let level = self.computeRmsLevel(from: buffer)
-            self.emit(level: level)
+        ) { buffer, _ in
+            let level = Self.computeRmsLevel(from: buffer)
+            Self.emit(level: level, to: levelHandler)
         }
 
         isTapInstalled = true
@@ -86,7 +87,7 @@ final class AudioEngine {
         return inputFormat
     }
 
-    private func computeRmsLevel(from buffer: AVAudioPCMBuffer) -> Float {
+    nonisolated private static func computeRmsLevel(from buffer: AVAudioPCMBuffer) -> Float {
         guard let channels = buffer.floatChannelData else { return 0 }
 
         let frameLength = Int(buffer.frameLength)
@@ -113,13 +114,10 @@ final class AudioEngine {
         return min(max(rms, 0), 1)
     }
 
-    private func emit(level: Float) {
-        guard let onLevel else { return }
+    nonisolated private static func emit(level: Float, to handler: LevelHandler?) {
+        guard let handler else { return }
         let clampedLevel = min(max(level, 0), 1)
-
-        DispatchQueue.main.async {
-            onLevel(clampedLevel)
-        }
+        handler(clampedLevel)
     }
 }
 

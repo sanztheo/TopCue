@@ -154,7 +154,9 @@ final class WindowManager {
 
     private func configureAudioPipeline() {
         audioEngine.onLevel = { [weak self] level in
-            self?.voiceDetector.consume(level: level)
+            DispatchQueue.main.async { [weak self] in
+                self?.voiceDetector.consume(level: level)
+            }
         }
     }
 
