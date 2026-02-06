@@ -42,6 +42,7 @@ struct EditorView: View {
                     )
                 } else {
                     EmptyEditorView(
+                        windowManager: windowManager,
                         isSidebarVisible: $isSidebarVisible,
                         onCreate: createScript
                     )
@@ -96,15 +97,19 @@ private struct WindowAccessor: NSViewRepresentable {
 
 private struct EmptyEditorView: View {
 
+    var windowManager: WindowManager
     @Binding var isSidebarVisible: Bool
     var onCreate: () -> Void
     @State private var isButtonHovered = false
+    @State private var isSettingsHovered = false
+    @State private var isSettingsPresented = false
 
     var body: some View {
         VStack(spacing: 0) {
             HStack {
                 SidebarToggleButton(isSidebarVisible: $isSidebarVisible)
                 Spacer()
+                settingsButton
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
@@ -148,6 +153,33 @@ private struct EmptyEditorView: View {
             }
 
             Spacer()
+        }
+    }
+
+    private var settingsButton: some View {
+        Button {
+            isSettingsPresented.toggle()
+        } label: {
+            Image(systemName: "slider.horizontal.3")
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(isSettingsHovered ? NotionTheme.text : NotionTheme.secondaryText)
+                .frame(width: 28, height: 28)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(isSettingsHovered ? NotionTheme.hover : .clear)
+                )
+        }
+        .buttonStyle(.plain)
+        .onHover { isSettingsHovered = $0 }
+        .help("Settings")
+        .popover(isPresented: $isSettingsPresented, arrowEdge: .top) {
+            NotionSettingsPopover(
+                state: windowManager.prompterState,
+                voiceDetector: windowManager.voiceDetector,
+                onToggleMode: { windowManager.toggleMode() },
+                onToggleInvisibility: { windowManager.toggleInvisibility() },
+                onToggleVoiceMode: { windowManager.toggleVoiceMode() }
+            )
         }
     }
 }
@@ -194,6 +226,8 @@ struct EditorDetailView: View {
     @FocusState private var isEditorFocused: Bool
     @State private var isPresentHovered = false
     @State private var isFavHovered = false
+    @State private var isSettingsHovered = false
+    @State private var isSettingsPresented = false
 
     /// Binding custom : set() = edition reelle, pas un switch de script.
     private var titleBinding: Binding<String> {
@@ -261,6 +295,8 @@ struct EditorDetailView: View {
 
             Spacer()
 
+            settingsButton
+
             Button {
                 withAnimation(.spring(duration: 0.25)) {
                     script.isFavorite.toggle()
@@ -303,6 +339,33 @@ struct EditorDetailView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
+    }
+
+    private var settingsButton: some View {
+        Button {
+            isSettingsPresented.toggle()
+        } label: {
+            Image(systemName: "slider.horizontal.3")
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(isSettingsHovered ? NotionTheme.text : NotionTheme.secondaryText)
+                .frame(width: 28, height: 28)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(isSettingsHovered ? NotionTheme.hover : .clear)
+                )
+        }
+        .buttonStyle(.plain)
+        .onHover { isSettingsHovered = $0 }
+        .help("Settings")
+        .popover(isPresented: $isSettingsPresented, arrowEdge: .top) {
+            NotionSettingsPopover(
+                state: windowManager.prompterState,
+                voiceDetector: windowManager.voiceDetector,
+                onToggleMode: { windowManager.toggleMode() },
+                onToggleInvisibility: { windowManager.toggleInvisibility() },
+                onToggleVoiceMode: { windowManager.toggleVoiceMode() }
+            )
+        }
     }
 
     private var metadataLine: some View {

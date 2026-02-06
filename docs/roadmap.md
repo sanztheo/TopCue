@@ -71,20 +71,20 @@ Suivi de progression du projet. Chaque tache est marquee : fait, en cours, ou a 
 
 ---
 
-## Phase 3 : Voice Activation
+## Phase 3 : Voice Activation ✅
 
 > Defilement controle par la voix
 
 | # | Tache | Statut |
 |---|-------|--------|
-| 3.1 | `AudioEngine` - wrapper AVAudioEngine, tap sur inputNode | 🔲 A faire |
-| 3.2 | `VoiceDetector` - VAD basee sur seuil RMS, debounce speaking/silence | 🔲 A faire |
-| 3.3 | Sensibilite configurable | 🔲 A faire |
-| 3.4 | Integration VoiceDetector <-> ScrollController (speaking = scroll, silence = pause douce) | 🔲 A faire |
-| 3.5 | `VoiceBeamView` - arc/beam anime selon niveau audio | 🔲 A faire |
-| 3.6 | Couleur dynamique selon intensite (bleu -> violet -> rouge) | 🔲 A faire |
+| 3.1 | `AudioEngine` - wrapper AVAudioEngine, tap sur inputNode | ✅ Done |
+| 3.2 | `VoiceDetector` - VAD basee sur seuil RMS, debounce speaking/silence | ✅ Done |
+| 3.3 | Sensibilite configurable | ✅ Done |
+| 3.4 | Integration VoiceDetector <-> ScrollController (speaking = scroll, silence = pause douce) | ✅ Done |
+| 3.5 | `VoiceBeamView` - arc/beam anime selon niveau audio | ✅ Done |
+| 3.6 | Couleur dynamique selon intensite (bleu -> violet -> rouge) | ✅ Done |
 | 3.7 | Pause au hover (mouse enter = pause, mouse exit = resume) | ✅ Done |
-| 3.8 | Permission micro - demande au premier lancement | 🔲 A faire |
+| 3.8 | Permission micro - demande au premier lancement | ✅ Done |
 
 ---
 
@@ -130,8 +130,8 @@ Suivi de progression du projet. Chaque tache est marquee : fait, en cours, ou a 
 | 1.5 - Integration Notch | ✅ Complete | 6/6 |
 | 1.6 - Design Editeur | ✅ Quasi complete | 6/7 (+1 partiel) |
 | 2 - Notch + Invisible | ✅ Quasi complete | 7/8 (+1 partiel) |
-| 3 - Voice Activation | 🔄 En cours | 1/8 |
+| 3 - Voice Activation | ✅ Complete | 8/8 |
 | 4 - Polish | 🔄 En cours | 0/10 (+4 partiels) |
 | 5 - Post-launch | 🔲 A faire | 0/8 (+1 partiel) |
 
-**Total : 30/57 taches completees + 7 partielles (~55-65% de progression reelle)**
+**Total : 37/57 taches completees + 7 partielles (~65-75% de progression reelle)**
