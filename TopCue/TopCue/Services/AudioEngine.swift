@@ -35,21 +35,20 @@ final class AudioEngine {
         guard !engine.isRunning else { return }
 
         let inputNode = engine.inputNode
-        let inputFormat = inputNode.inputFormat(forBus: 0)
+        let outputFormat = inputNode.outputFormat(forBus: 0)
         let levelHandler = onLevel
         let levelBoost = Constants.Voice.inputLevelBoost
 
-        guard inputFormat.channelCount > 0 else {
+        guard outputFormat.channelCount > 0,
+              outputFormat.sampleRate > 0 else {
             throw AudioEngineError.microphoneUnavailable
         }
-
-        let tapFormat = preferredTapFormat(from: inputFormat)
         inputNode.removeTap(onBus: 0)
 
         inputNode.installTap(
             onBus: 0,
             bufferSize: AVAudioFrameCount(Constants.Voice.bufferSize),
-            format: tapFormat
+            format: outputFormat
         ) { buffer, _ in
             let level = Self.computeRmsLevel(from: buffer, levelBoost: levelBoost)
             Self.emit(level: level, to: levelHandler)
@@ -74,19 +73,6 @@ final class AudioEngine {
     }
 
     // MARK: - Private
-
-    private func preferredTapFormat(from inputFormat: AVAudioFormat) -> AVAudioFormat {
-        if let monoFormat = AVAudioFormat(
-            commonFormat: .pcmFormatFloat32,
-            sampleRate: inputFormat.sampleRate,
-            channels: 1,
-            interleaved: false
-        ) {
-            return monoFormat
-        }
-
-        return inputFormat
-    }
 
     nonisolated private static func computeRmsLevel(
         from buffer: AVAudioPCMBuffer,

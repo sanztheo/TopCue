@@ -30,6 +30,12 @@ final class VoiceDetector {
     /// Niveau audio RMS courant (0.0 a 1.0).
     var audioLevel: Float = 0
 
+    /// Indique si au moins un buffer audio a ete recu depuis le demarrage.
+    private(set) var hasReceivedSamples: Bool = false
+
+    /// Niveau maximum observe depuis le dernier reset.
+    private(set) var peakAudioLevel: Float = 0
+
     /// Sensibilite utilisateur (0.0 = tres sensible, 1.0 = peu sensible).
     var sensitivity: Double = Constants.Voice.defaultSensitivity {
         didSet {
@@ -60,9 +66,12 @@ final class VoiceDetector {
     /// - Parameter level: Niveau RMS normalise entre 0.0 et 1.0.
     func consume(level: Float) {
         let clampedLevel = min(max(level, 0), 1)
+        hasReceivedSamples = true
         audioLevel = clampedLevel
+        peakAudioLevel = max(peakAudioLevel, clampedLevel)
 
         if clampedLevel >= threshold {
+            microphonePermissionMessage = nil
             handleSpeakingDetected()
             return
         }
@@ -76,6 +85,8 @@ final class VoiceDetector {
         silenceWorkItem = nil
         activityState = .silence
         audioLevel = 0
+        hasReceivedSamples = false
+        peakAudioLevel = 0
     }
 
     /// Stocke un message de permission refusee pour l'affichage UI.

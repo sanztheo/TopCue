@@ -192,6 +192,16 @@ struct PrompterView: View {
                     .clipShape(Capsule())
             }
 
+            if state.playbackState == .hoveredPause {
+                Text("Pause survol active")
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.78))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(.black.opacity(0.7))
+                    .clipShape(Capsule())
+            }
+
             Spacer()
 
             HStack(spacing: 6) {

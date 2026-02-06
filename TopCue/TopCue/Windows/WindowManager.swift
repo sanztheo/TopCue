@@ -39,6 +39,9 @@ final class WindowManager {
     @ObservationIgnored
     private let audioEngine = AudioEngine()
 
+    @ObservationIgnored
+    private var voiceSignalProbeTask: Task<Void, Never>?
+
     /// La fenetre est-elle actuellement affichee.
     var isPanelVisible: Bool {
         panel?.isVisible ?? false
@@ -186,6 +189,7 @@ final class WindowManager {
             prompterState.setVoiceModeEnabled(true)
             prompterState.play()
             voiceDetector.setMicrophonePermissionMessage(nil)
+            startVoiceSignalProbe()
         } catch {
             prompterState.setVoiceModeEnabled(false)
             voiceDetector.setMicrophonePermissionMessage("Microphone indisponible")
@@ -194,8 +198,35 @@ final class WindowManager {
     }
 
     private func stopVoiceMode() {
+        voiceSignalProbeTask?.cancel()
+        voiceSignalProbeTask = nil
         audioEngine.stop()
         voiceDetector.reset()
+    }
+
+    private func startVoiceSignalProbe() {
+        voiceSignalProbeTask?.cancel()
+
+        voiceSignalProbeTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            guard let self else { return }
+            guard self.prompterState.voiceModeEnabled else { return }
+            guard self.voiceDetector.microphonePermissionMessage == nil else { return }
+
+            if !self.voiceDetector.hasReceivedSamples {
+                self.voiceDetector.setMicrophonePermissionMessage(
+                    "Aucun flux micro. Verifiez Reglages Systeme > Son > Entree."
+                )
+                return
+            }
+
+            let minimumUsefulLevel = self.voiceDetector.threshold * 0.6
+            if self.voiceDetector.peakAudioLevel < minimumUsefulLevel {
+                self.voiceDetector.setMicrophonePermissionMessage(
+                    "Signal micro faible. Montez l'entree ou baissez la sensibilite."
+                )
+            }
+        }
     }
 
     private func ensureMicrophonePermission() async -> Bool {
