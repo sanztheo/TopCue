@@ -73,13 +73,13 @@ enum Constants {
 
     enum Window {
         /// Taille minimum de la fenetre prompteur
-        static let minSize = NSSize(width: 200, height: 100)
+        static let minSize = NSSize(width: 480, height: 320)
 
         /// Taille par defaut de la fenetre prompteur
-        static let defaultSize = NSSize(width: 600, height: 300)
+        static let defaultSize = NSSize(width: 700, height: 450)
 
         /// Taille par defaut de la fenetre editeur
-        static let editorSize = NSSize(width: 800, height: 600)
+        static let editorSize = NSSize(width: 900, height: 650)
     }
 
     // MARK: - Colors
