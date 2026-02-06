@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 /// Vue principale de l'editeur : sidebar + editeur de texte.
-/// Layout custom HStack, design system Notion, toggle sidebar Cmd+S.
+/// Title bar transparent integree, toggle sidebar Cmd+S, design Notion.
 struct EditorView: View {
 
     @Environment(\.modelContext) private var modelContext
@@ -20,7 +20,6 @@ struct EditorView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            // Sidebar
             if isSidebarVisible {
                 ScriptListView(
                     selectedScript: $selectedScript,
@@ -34,7 +33,6 @@ struct EditorView: View {
                     .frame(width: 1)
             }
 
-            // Detail
             Group {
                 if let selectedScript {
                     EditorDetailView(
@@ -50,10 +48,10 @@ struct EditorView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background { NotionTheme.content.ignoresSafeArea() }
         }
-        .background(NotionTheme.content)
+        .background { WindowAccessor() }
         .overlay {
-            // Cmd+S : toggle sidebar
             Button("", action: toggleSidebar)
                 .keyboardShortcut("s")
                 .opacity(0)
@@ -77,9 +75,25 @@ struct EditorView: View {
     }
 }
 
+// MARK: - Window Accessor
+
+/// Configure la fenetre : title bar transparent, pas de titre, contenu plein cadre.
+private struct WindowAccessor: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let nsView = NSView()
+        DispatchQueue.main.async {
+            guard let window = nsView.window else { return }
+            window.titlebarAppearsTransparent = true
+            window.titleVisibility = .hidden
+            window.styleMask.insert(.fullSizeContentView)
+        }
+        return nsView
+    }
+    func updateNSView(_ nsView: NSView, context: Context) {}
+}
+
 // MARK: - Empty State
 
-/// Etat vide — minimaliste, couleurs Notion.
 private struct EmptyEditorView: View {
 
     @Binding var isSidebarVisible: Bool
@@ -88,7 +102,6 @@ private struct EmptyEditorView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top bar avec toggle sidebar
             HStack {
                 SidebarToggleButton(isSidebarVisible: $isSidebarVisible)
                 Spacer()
@@ -139,9 +152,8 @@ private struct EmptyEditorView: View {
     }
 }
 
-// MARK: - Sidebar Toggle Button
+// MARK: - Sidebar Toggle
 
-/// Bouton toggle sidebar — icone sidebar, hover discret.
 struct SidebarToggleButton: View {
 
     @Binding var isSidebarVisible: Bool
@@ -154,7 +166,7 @@ struct SidebarToggleButton: View {
             }
         } label: {
             Image(systemName: "sidebar.left")
-                .font(.system(size: 14, weight: .regular))
+                .font(.system(size: 14))
                 .foregroundStyle(isHovered ? NotionTheme.text : NotionTheme.secondaryText)
                 .frame(width: 28, height: 28)
                 .background(
@@ -170,8 +182,8 @@ struct SidebarToggleButton: View {
 
 // MARK: - Editor Detail
 
-/// Vue detail : editeur de texte pour un script individuel.
-/// Design Notion : grand titre, metadata, editeur propre.
+/// Vue detail Notion : grand titre, metadata, editeur.
+/// Utilise des Bindings custom pour ne pas trigger modifiedAt au changement de script.
 struct EditorDetailView: View {
 
     @Bindable var script: Script
@@ -183,13 +195,32 @@ struct EditorDetailView: View {
     @State private var isPresentHovered = false
     @State private var isFavHovered = false
 
+    /// Binding custom : set() = edition reelle, pas un switch de script.
+    private var titleBinding: Binding<String> {
+        Binding(
+            get: { script.title },
+            set: { newValue in
+                script.title = newValue
+                script.modifiedAt = Date()
+            }
+        )
+    }
+
+    private var contentBinding: Binding<String> {
+        Binding(
+            get: { script.content },
+            set: { newValue in
+                script.content = newValue
+                script.modifiedAt = Date()
+            }
+        )
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Top bar
             topBar
 
-            // Titre — grand, bold, sans bordure, style Notion
-            TextField("Sans titre", text: $script.title)
+            TextField("Sans titre", text: titleBinding)
                 .textFieldStyle(.plain)
                 .font(.system(size: 34, weight: .bold))
                 .foregroundStyle(NotionTheme.text)
@@ -197,24 +228,18 @@ struct EditorDetailView: View {
                 .onSubmit { isEditorFocused = true }
                 .padding(.horizontal, 52)
                 .padding(.top, 16)
-                .onChange(of: script.title) {
-                    script.modifiedAt = Date()
-                }
 
-            // Metadata
             metadataLine
                 .padding(.horizontal, 52)
                 .padding(.top, 8)
                 .padding(.bottom, 28)
 
-            // Separateur subtil
             Rectangle()
                 .fill(NotionTheme.subtleDivider)
                 .frame(height: 1)
                 .padding(.horizontal, 48)
 
-            // Editeur de texte
-            TextEditor(text: $script.content)
+            TextEditor(text: contentBinding)
                 .font(.system(.body))
                 .foregroundStyle(NotionTheme.text)
                 .lineSpacing(5)
@@ -222,9 +247,6 @@ struct EditorDetailView: View {
                 .focused($isEditorFocused)
                 .padding(.horizontal, 48)
                 .padding(.top, 16)
-                .onChange(of: script.content) {
-                    script.modifiedAt = Date()
-                }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .onAppear { updateFocus() }
@@ -235,12 +257,10 @@ struct EditorDetailView: View {
 
     private var topBar: some View {
         HStack(spacing: 8) {
-            // Toggle sidebar
             SidebarToggleButton(isSidebarVisible: $isSidebarVisible)
 
             Spacer()
 
-            // Favori
             Button {
                 withAnimation(.spring(duration: 0.25)) {
                     script.isFavorite.toggle()
@@ -260,7 +280,6 @@ struct EditorDetailView: View {
             .buttonStyle(.plain)
             .onHover { isFavHovered = $0 }
 
-            // Presenter
             Button {
                 windowManager.showPrompter(script: script)
             } label: {
@@ -297,8 +316,6 @@ struct EditorDetailView: View {
         .font(.system(size: 12))
         .foregroundStyle(NotionTheme.tertiaryText)
     }
-
-    // MARK: - Helpers
 
     private func updateFocus() {
         if script.title.isEmpty {

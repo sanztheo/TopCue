@@ -52,7 +52,7 @@ struct ScriptListView: View {
                 scriptList
             }
         }
-        .background(NotionTheme.sidebar)
+        .background { NotionTheme.sidebar.ignoresSafeArea() }
     }
 
     // MARK: - Subviews
